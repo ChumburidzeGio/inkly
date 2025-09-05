@@ -6,29 +6,87 @@ const { data, options, theme = 'dark' } = props
 
 const toast = useToast()
 const signatureContainer = ref<HTMLElement>()
+const copied = ref(false)
 
-const { copy, copied } = useClipboard({ 
-  source: () => signatureContainer.value!.innerHTML, 
-  copiedDuring: 1000 
-})
-
-function copyToClipboard() {
-  try {
-    copy()
+async function copyToClipboard() {
+  const el = signatureContainer.value
+  if (!el) {
     toast.add({
-      title: 'Signature copied to clipboard!',
-      description: 'You can now paste it in your email client.',
-      icon: 'i-heroicons-clipboard-document-check',
-      color: 'green',
-      timeout: 2000,
-    })
-  } catch (error) {
-    toast.add({
-      title: 'Failed to copy',
+      title: 'Preview not ready',
       icon: 'i-heroicons-exclamation-circle',
       color: 'red',
       timeout: 2000,
     })
+    return
+  }
+
+  const html = el.innerHTML
+  const text = el.innerText || el.textContent || ''
+
+  try {
+    // Prefer modern async Clipboard API with HTML payload
+    if (navigator.clipboard && 'write' in navigator.clipboard) {
+      const item = new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([text], { type: 'text/plain' })
+      })
+      // @ts-expect-error: Clipboard.write is available in supported browsers
+      await navigator.clipboard.write([item])
+    } else {
+      throw new Error('clipboard.write not supported')
+    }
+
+    copied.value = true
+    setTimeout(() => { copied.value = false }, 1000)
+    toast.add({
+      title: 'Signature copied to clipboard!',
+      description: 'Paste into your email client as rich signature.',
+      icon: 'i-heroicons-clipboard-document-check',
+      color: 'green',
+      timeout: 2000,
+    })
+  } catch (err) {
+    // Fallback: select DOM and execCommand('copy') to copy rich HTML
+    try {
+      const selection = window.getSelection()
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      selection?.removeAllRanges()
+      selection?.addRange(range)
+      const ok = document.execCommand('copy')
+      selection?.removeAllRanges()
+      if (!ok) throw new Error('execCommand copy failed')
+
+      copied.value = true
+      setTimeout(() => { copied.value = false }, 1000)
+      toast.add({
+        title: 'Signature copied to clipboard!',
+        description: 'Paste into your email client as rich signature.',
+        icon: 'i-heroicons-clipboard-document-check',
+        color: 'green',
+        timeout: 2000,
+      })
+    } catch (fallbackErr) {
+      // Last resort: copy plain text so user gets something
+      try {
+        await navigator.clipboard?.writeText?.(text)
+        copied.value = true
+        setTimeout(() => { copied.value = false }, 1000)
+        toast.add({
+          title: 'Copied as plain text',
+          icon: 'i-heroicons-clipboard-document',
+          color: 'yellow',
+          timeout: 2000,
+        })
+      } catch {
+        toast.add({
+          title: 'Failed to copy',
+          icon: 'i-heroicons-exclamation-circle',
+          color: 'red',
+          timeout: 2000,
+        })
+      }
+    }
   }
 }
 </script>
@@ -40,8 +98,8 @@ function copyToClipboard() {
         <table :style="options.color.transparent ? {} : { backgroundColor: `${options.color.background}` }" style="width: 100%;">
           <tbody>
             <tr>
-              <td 
-                style="padding: 6px;" 
+              <td
+                style="padding: 6px;"
                 :style="[
                   { width: `${options.image.size + options.gap.image}px` },
                   options.image.align === 'top' ? { verticalAlign: 'top' } : {},
@@ -82,7 +140,7 @@ function copyToClipboard() {
                   <tr v-if="data.fullName">
                     <td
                       :style="[
-                        { 
+                        {
                           fontSize: `${options.size.title}px`,
                           color: options.color.autoTitle ? '' : options.color.title,
                           fontWeight: options.font.titleWeight
@@ -148,4 +206,3 @@ function copyToClipboard() {
     </div>
   </div>
 </template>
-
