@@ -150,14 +150,17 @@ async function copyToClipboard() {
                       {{ data.fullName }}
                     </td>
                   </tr>
-                  <tr v-if="data.jobTitle" :style=" { color: `${options.color.subtitle}`}">
-                    <td>
-                      {{ data.jobTitle }}
-                    </td>
-                  </tr>
-                  <tr v-if="data.company" :style=" { color: `${options.color.subtitle}`}">
+                  <tr v-if="data.jobTitle || data.company" :style=" { color: `${options.color.subtitle}`}">
                     <td :style="{ fontSize: `${options.size.subtitle}px`, color: `${options.color.subtitle}` }">
-                      {{ data.company }}
+                      <template v-if="data.jobTitle && data.company">
+                        {{ data.jobTitle }} at {{ data.company }}
+                      </template>
+                      <template v-else-if="data.jobTitle">
+                        {{ data.jobTitle }}
+                      </template>
+                      <template v-else>
+                        {{ data.company }}
+                      </template>
                     </td>
                   </tr>
                   <tr v-if="data.email" :style=" { color: `${options.color.subtitle}`}">
