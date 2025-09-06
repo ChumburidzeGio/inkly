@@ -3,20 +3,20 @@ import type { SignatureFormData, SignatureOptions } from '~~/types'
 
 const defaultOptions: SignatureOptions = {
   gap: {
+    image: 7,
+    social: 2,
+    socialSection: 3,
+    socialToCompany: 9,
+    legalSection: 5,
     title: 10,
     subtitle: 10,
-    social: 2,
-    image: 7,
-    socialSection: 8,
-    legalSection: 6,
-    socialToCompany: 8,
   },
   size: {
     title: 16,
     subtitle: 14,
     social: 13,
     legalCompany: 12,
-    legalDisclaimer: 11,
+    legalDisclaimer: 12,
   },
   color: {
     title: '#000000',
@@ -51,9 +51,9 @@ const defaultData: SignatureFormData = {
   fullName: 'Giorgi Chumburidze',
   jobTitle: 'CEO',
   company: 'Relocify',
-  phone: '(+31) 6 85 07 79 95',
-  legalCompanyLine: 'Esflow Technologies B.V.\nKvK: 75821036 · VAT: NL860408048B01 · Herengracht 449 A, 1017 BR, Amsterdam',
-  legalDisclaimer: 'This e-mail is intended only for the named recipient. Any review, use, disclosure, or distribution by others is prohibited. If you received it in error, please notify the sender and delete it.',
+  phone: '+31 6 8507 7995',
+  legalCompanyLine: 'Esflow Technologies B.V. · KvK: 75821036 · VAT: NL860408048B01 · Herengracht 449 A, 1017 BR, Amsterdam',
+  legalDisclaimer: 'This email is intended only for the named recipient. Any review, use, disclosure, or distribution by others is prohibited. If you received it in error, please notify the sender and delete it.',
   socials: [
     { title: 'www.relocify.nl', url: 'https://relocify.nl/' },
     { title: 'book call', url: 'https://cal.com/relocify/15m' },

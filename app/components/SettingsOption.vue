@@ -606,7 +606,7 @@ const uid = Math.random().toString(36).substring(2, 15)
               <USlider
                 v-model="options.gap.image"
                 :min="0"
-                :max="30"
+                :max="20"
                 class="flex-1"
               />
               <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
@@ -636,7 +636,7 @@ const uid = Math.random().toString(36).substring(2, 15)
               <USlider
                 v-model="options.gap.socialSection"
                 :min="0"
-                :max="40"
+                :max="20"
                 class="flex-1"
               />
               <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
@@ -651,7 +651,7 @@ const uid = Math.random().toString(36).substring(2, 15)
               <USlider
                 v-model="options.gap.socialToCompany"
                 :min="0"
-                :max="40"
+                :max="20"
                 class="flex-1"
               />
               <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
@@ -666,7 +666,7 @@ const uid = Math.random().toString(36).substring(2, 15)
               <USlider
                 v-model="options.gap.legalSection"
                 :min="0"
-                :max="40"
+                :max="20"
                 class="flex-1"
               />
               <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">

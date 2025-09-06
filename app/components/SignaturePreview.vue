@@ -13,6 +13,12 @@ function px(n: number) {
   return `${Math.round(n * scale.value)}px`
 }
 
+// Normalize single-line fields to avoid unintended line breaks
+const normalizeSingleLine = (s?: string) => (s || '').replace(/\r?\n/g, ' ').replace(/\s{2,}/g, ' ').trim()
+const jobTitleText = computed(() => normalizeSingleLine(data.jobTitle))
+const companyText = computed(() => normalizeSingleLine(data.company))
+const phoneText = computed(() => normalizeSingleLine(data.phone))
+
 async function copyToClipboard() {
   const el = signatureContainer.value
   if (!el) {
@@ -25,7 +31,21 @@ async function copyToClipboard() {
     return
   }
 
-  const html = el.innerHTML
+  // Build a sanitized HTML for copying: remove side padding and full-width
+  const cloned = el.cloneNode(true) as HTMLElement
+  const tableEl = cloned.querySelector('table') as HTMLTableElement | null
+  if (tableEl) {
+    tableEl.style.width = 'auto'
+    tableEl.style.borderCollapse = 'collapse'
+    tableEl.setAttribute('cellpadding', '0')
+    tableEl.setAttribute('cellspacing', '0')
+  }
+  cloned.querySelectorAll('td').forEach((td) => {
+    const cell = td as HTMLElement
+    cell.style.paddingLeft = '0'
+    cell.style.paddingRight = '0'
+  })
+  const html = tableEl ? tableEl.outerHTML : cloned.innerHTML
   const text = el.innerText || el.textContent || ''
 
   try {
@@ -161,21 +181,21 @@ async function copyToClipboard() {
                       {{ data.fullName }}
                     </td>
                   </tr>
-                  <tr v-if="data.jobTitle || data.company">
+                  <tr v-if="jobTitleText || companyText">
                     <td :style="{ fontSize: px(options.size.subtitle), color: options.color.autoTitle ? '' : options.color.subtitle }">
-                      <template v-if="data.jobTitle && data.company">
-                        {{ data.jobTitle }}&nbsp;at&nbsp;{{ data.company }}
+                      <template v-if="jobTitleText && companyText">
+                        {{ jobTitleText }}&nbsp;at&nbsp;{{ companyText }}
                       </template>
-                      <template v-else-if="data.jobTitle">
-                        {{ data.jobTitle }}
+                      <template v-else-if="jobTitleText">
+                        {{ jobTitleText }}
                       </template>
                       <template v-else>
-                        {{ data.company }}
+                        {{ companyText }}
                       </template>
                     </td>
                   </tr>
-                  <tr v-if="data.phone">
-                    <td :style="{ color: options.color.autoTitle ? '' : options.color.subtitle }">{{ data.phone }}</td>
+                  <tr v-if="phoneText">
+                    <td :style="{ color: options.color.autoTitle ? '' : options.color.subtitle }">{{ phoneText }}</td>
                   </tr>
                 </table>
               </td>
@@ -184,7 +204,7 @@ async function copyToClipboard() {
             <tr v-if="data.socials.length > 0">
               <td
                 colspan="2"
-                :style="[{ padding: '6px' }, { paddingTop: px(options.gap.socialSection) }]"
+                :style="[{ padding: '0 6px' }, { paddingTop: px(options.gap.socialSection) }]"
               >
                 <div :style="{ fontSize: px(options.size.social), color: options.color.social }">
                   <template v-for="(social, idx) in data.socials.filter(s => s.url)" :key="social.title + idx">
