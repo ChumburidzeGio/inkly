@@ -6,7 +6,7 @@ const options = ref<SignatureOptions>({
     title: 10,
     subtitle: 10,
     social: 10,
-    image: 10,
+    image: 7,
   },
   size: {
     title: 16,
@@ -24,7 +24,7 @@ const options = ref<SignatureOptions>({
   image: {
     align: 'center',
     form: 'circle',
-    size: 90,
+    size: 60,
     border: false,
     borderStyle: 'solid',
     borderColor: '#000000',

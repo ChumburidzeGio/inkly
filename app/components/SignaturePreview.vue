@@ -104,7 +104,7 @@ async function copyToClipboard() {
           <tbody>
             <tr>
               <td
-                style="padding: 6px;"
+                style="padding: 4px;"
                 :style="[
                   { width: `${options.image.size + options.gap.image}px` },
                   options.image.align === 'top' ? { verticalAlign: 'top' } : {},
@@ -130,7 +130,7 @@ async function copyToClipboard() {
                 >
               </td>
               <td
-                style="padding: 6px;"
+                style="padding: 4px;"
                 :style="[
                   { fontSize: px(options.size.subtitle), verticalAlign: 'top' }
                 ]"
@@ -173,30 +173,29 @@ async function copyToClipboard() {
                       {{ data.phone }}
                     </td>
                   </tr>
-                  <tr v-if="data.socials.length > 0">
-                    <td>
-                      <table>
-                        <tbody>
-                          <tr :style="{ fontSize: px(options.size.social) }">
-                            <td v-for="social in data.socials.filter((social) => social.url)" :key="social.title" :style="{ paddingRight: `${options.gap.social}px` }">
-                              <a :href="social.url" style="text-decoration: underline" :style="{ color: `${options.color.social}` }">{{ social.title }}</a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
+                  
                 </table>
+              </td>
+            </tr>
+            <!-- Social links full width under main row -->
+            <tr v-if="data.socials.length > 0">
+              <td colspan="2" style="padding: 6px;">
+                <div :style="{ fontSize: px(options.size.social), color: options.color.social }">
+                  <template v-for="(social, idx) in data.socials.filter(s => s.url)" :key="social.title + idx">
+                    <a :href="social.url" style="text-decoration: underline" :style="{ color: options.color.social }">{{ social.title }}</a>
+                    <span v-if="idx < data.socials.filter(s => s.url).length - 1" style="margin: 0 8px; color: inherit;">|</span>
+                  </template>
+                </div>
               </td>
             </tr>
             <!-- Footer / Legal Disclaimer spanning full width -->
             <tr>
               <td colspan="2" style="padding: 6px;"
-                  :style="{ fontSize: px(options.size.social), color: `${options.color.subtitle}` }">
+                  :style="{ fontSize: px(options.size.social * 0.9), color: `${options.color.subtitle}` }">
                 <div v-if="data.legalCompanyLine">
                   {{ data.legalCompanyLine }}
                 </div>
-                <div v-if="data.legalDisclaimer" style="margin-top: 6px; white-space: pre-wrap;">
+                <div v-if="data.legalDisclaimer" :style="{ marginTop: '6px', whiteSpace: 'pre-wrap', fontSize: px(options.size.social * 0.8) }">
                   {{ data.legalDisclaimer }}
                 </div>
               </td>
