@@ -42,7 +42,9 @@ async function copyToClipboard() {
     }
 
     copied.value = true
-    setTimeout(() => { copied.value = false }, 1000)
+    setTimeout(() => {
+      copied.value = false
+    }, 1000)
     toast.add({
       title: 'Signature copied to clipboard!',
       description: 'Paste into your email client as rich signature.',
@@ -63,7 +65,9 @@ async function copyToClipboard() {
       if (!ok) throw new Error('execCommand copy failed')
 
       copied.value = true
-      setTimeout(() => { copied.value = false }, 1000)
+      setTimeout(() => {
+        copied.value = false
+      }, 1000)
       toast.add({
         title: 'Signature copied to clipboard!',
         description: 'Paste into your email client as rich signature.',
@@ -76,7 +80,9 @@ async function copyToClipboard() {
       try {
         await navigator.clipboard?.writeText?.(text)
         copied.value = true
-        setTimeout(() => { copied.value = false }, 1000)
+        setTimeout(() => {
+          copied.value = false
+        }, 1000)
         toast.add({
           title: 'Copied as plain text',
           icon: 'i-heroicons-clipboard-document',
@@ -155,10 +161,10 @@ async function copyToClipboard() {
                       {{ data.fullName }}
                     </td>
                   </tr>
-                  <tr v-if="data.jobTitle || data.company" :style=" { color: `${options.color.subtitle}`}">
-                    <td :style="{ fontSize: px(options.size.subtitle), color: `${options.color.subtitle}` }">
+                  <tr v-if="data.jobTitle || data.company">
+                    <td :style="{ fontSize: px(options.size.subtitle), color: options.color.autoTitle ? '' : options.color.subtitle }">
                       <template v-if="data.jobTitle && data.company">
-                        {{ data.jobTitle }} at {{ data.company }}
+                        {{ data.jobTitle }}&nbsp;at&nbsp;{{ data.company }}
                       </template>
                       <template v-else-if="data.jobTitle">
                         {{ data.jobTitle }}
@@ -168,34 +174,44 @@ async function copyToClipboard() {
                       </template>
                     </td>
                   </tr>
-                  <tr v-if="data.phone" :style=" { color: `${options.color.subtitle}`}">
-                    <td>
-                      {{ data.phone }}
-                    </td>
+                  <tr v-if="data.phone">
+                    <td :style="{ color: options.color.autoTitle ? '' : options.color.subtitle }">{{ data.phone }}</td>
                   </tr>
-                  
                 </table>
               </td>
             </tr>
             <!-- Social links full width under main row -->
             <tr v-if="data.socials.length > 0">
-              <td colspan="2" style="padding: 6px;">
+              <td
+                colspan="2"
+                :style="[{ padding: '6px' }, { paddingTop: px(options.gap.socialSection) }]"
+              >
                 <div :style="{ fontSize: px(options.size.social), color: options.color.social }">
                   <template v-for="(social, idx) in data.socials.filter(s => s.url)" :key="social.title + idx">
                     <a :href="social.url" style="text-decoration: underline" :style="{ color: options.color.social }">{{ social.title }}</a>
-                    <span v-if="idx < data.socials.filter(s => s.url).length - 1" style="margin: 0 8px; color: inherit;">|</span>
+                    <span
+                      v-if="idx < data.socials.filter(s => s.url).length - 1"
+                      :style="{ margin: `0 ${options.gap.social}px`, color: 'inherit' }"
+                    >
+                      ·
+                    </span>
                   </template>
                 </div>
               </td>
             </tr>
             <!-- Footer / Legal Disclaimer spanning full width -->
             <tr>
-              <td colspan="2" style="padding: 6px;"
-                  :style="{ fontSize: px(options.size.social * 0.9), color: `${options.color.subtitle}` }">
-                <div v-if="data.legalCompanyLine">
+              <td
+                colspan="2"
+                :style="[{ padding: '6px' }, { paddingTop: px(options.gap.socialToCompany) }, { color: options.color.legal }]"
+              >
+                <div v-if="data.legalCompanyLine" :style="{ fontSize: px(options.size.legalCompany), whiteSpace: 'pre-wrap' }">
                   {{ data.legalCompanyLine }}
                 </div>
-                <div v-if="data.legalDisclaimer" :style="{ marginTop: '6px', whiteSpace: 'pre-wrap', fontSize: px(options.size.social * 0.8) }">
+                <div
+                  v-if="data.legalDisclaimer"
+                  :style="{ marginTop: px(options.gap.legalSection), whiteSpace: 'pre-wrap', fontSize: px(options.size.legalDisclaimer) }"
+                >
                   {{ data.legalDisclaimer }}
                 </div>
               </td>

@@ -1,30 +1,36 @@
 <script setup lang="ts">
 import type { SignatureFormData, SignatureOptions } from '~~/types'
 
-const options = ref<SignatureOptions>({
+const defaultOptions: SignatureOptions = {
   gap: {
     title: 10,
     subtitle: 10,
-    social: 10,
+    social: 2,
     image: 7,
+    socialSection: 8,
+    legalSection: 6,
+    socialToCompany: 8,
   },
   size: {
     title: 16,
     subtitle: 14,
-    social: 14,
+    social: 13,
+    legalCompany: 12,
+    legalDisclaimer: 11,
   },
   color: {
     title: '#000000',
     autoTitle: true,
-    subtitle: '#848484',
+    subtitle: '#000000',
     social: '#848484',
+    legal: '#848484',
     background: '#ffffff',
     transparent: true,
   },
   image: {
     align: 'center',
     form: 'circle',
-    size: 60,
+    size: 75,
     border: false,
     borderStyle: 'solid',
     borderColor: '#000000',
@@ -36,25 +42,36 @@ const options = ref<SignatureOptions>({
     family: 'inter',
     titleWeight: '600'
   }
-})
+}
 
-const data = ref<SignatureFormData>({
+const options = useLocalStorage<SignatureOptions>('inkly_options', defaultOptions, { mergeDefaults: true })
+
+const defaultData: SignatureFormData = {
   image: 'https://www.relocify.nl/avatars/giorgi-2.png',
   fullName: 'Giorgi Chumburidze',
   jobTitle: 'CEO',
   company: 'Relocify',
   phone: '(+31) 6 85 07 79 95',
-  legalCompanyLine: 'Esflow Technologies B.V. | KvK number: 75821036 | Herengracht 449 A, 1017 BR, Amsterdam',
-  legalDisclaimer: 'The information in this e-mail is confidential and may be protected by professional secrecy. It is intended solely for the addressee. Any access to this e-mail is prohibited by persons other than the addressee. If you are not the named addressee, you are prohibited to make any attempt to publicize, reproduce or distribute this e-mail, this includes the taking or refraining of action in regards to the information obtained. Please notify the sender by e-mail immediately if you have received this e-mail by mistake and delete this e-mail from your system.',
+  legalCompanyLine: 'Esflow Technologies B.V.\nKvK: 75821036 · VAT: NL860408048B01 · Herengracht 449 A, 1017 BR, Amsterdam',
+  legalDisclaimer: 'This e-mail is intended only for the named recipient. Any review, use, disclosure, or distribution by others is prohibited. If you received it in error, please notify the sender and delete it.',
   socials: [
-    { title: 'Relocify', url: 'https://relocify.nl/' },
-    { title: 'TikTok', url: 'https://www.tiktok.com/@relocify_' },
-    { title: 'Instagram', url: 'https://www.instagram.com/relocify' },
-    { title: 'Whatsapp', url: 'https://api.whatsapp.com/send?phone=31626243500' },
+    { title: 'www.relocify.nl', url: 'https://relocify.nl/' },
+    { title: 'book call', url: 'https://cal.com/relocify/15m' },
+    { title: 'whatsapp', url: 'https://api.whatsapp.com/send?phone=31626243500' },
+    { title: 'telegram', url: 'https://t.me/RelocifyBot' },
   ],
-})
+}
 
-const theme = ref('dark')
+const data = useLocalStorage<SignatureFormData>('inkly_data', defaultData, { mergeDefaults: true })
+
+const theme = useLocalStorage('inkly_theme', 'dark')
+
+function resetState() {
+  // Reset persisted refs to defaults
+  options.value = JSON.parse(JSON.stringify(defaultOptions))
+  data.value = JSON.parse(JSON.stringify(defaultData))
+  theme.value = 'dark'
+}
 
 const emailSubject = 'Professionnal Email Signature'
 const emailContent = ref(`Hello,
@@ -96,14 +113,25 @@ onMounted(() => {
         <h2 class="text-sm font-medium">
           Signature Settings
         </h2>
-        <UButton
-          icon="i-lucide-x"
-          color="neutral"
-          variant="ghost"
-          class="lg:hidden"
-          size="xs"
-          @click="showSidebar = false"
-        />
+        <div class="flex items-center gap-2">
+          <UButton
+            icon="i-lucide-rotate-ccw"
+            color="neutral"
+            variant="outline"
+            size="xs"
+            @click="resetState()"
+          >
+            Reset
+          </UButton>
+          <UButton
+            icon="i-lucide-x"
+            color="neutral"
+            variant="ghost"
+            class="lg:hidden"
+            size="xs"
+            @click="showSidebar = false"
+          />
+        </div>
       </div>
       <div class="p-4">
         <SettingsOption v-model:options="options" v-model:data="data" />
@@ -172,7 +200,7 @@ onMounted(() => {
                 :data
                 :options
                 :theme
-                :is-mobile="isMobile"
+                :is-mobile
               />
             </div>
           </div>

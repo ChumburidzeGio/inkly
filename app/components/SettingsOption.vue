@@ -83,11 +83,11 @@ const uid = Math.random().toString(36).substring(2, 15)
         <div class="mt-4 space-y-4">
           <div>
             <label for="legalCompanyLine" class="block text-sm font-medium mb-1">Company/Address Line</label>
-            <UInput
+            <UTextarea
               id="legalCompanyLine"
               v-model="data.legalCompanyLine"
-              type="text"
-              icon="i-lucide-building"
+              :rows="3"
+              class="w-full"
               placeholder="Esflow Technologies B.V. | KvK number: ..."
             />
           </div>
@@ -324,15 +324,15 @@ const uid = Math.random().toString(36).substring(2, 15)
             <div class="flex items-center gap-2">
               <USlider
                 v-model="options.size.title"
-                :min="12"
-                :max="24"
+                :min="10"
+                :max="18"
                 class="flex-1"
               />
               <UInput
                 v-model.number="options.size.title"
                 type="number"
-                :min="12"
-                :max="24"
+                :min="10"
+                :max="18"
                 size="sm"
                 class="w-20"
               >
@@ -392,32 +392,80 @@ const uid = Math.random().toString(36).substring(2, 15)
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">Font Family</label>
-            <USelect
-              v-model="options.font.family"
-              :items="[
-                { label: 'Inter', value: 'inter' },
-                { label: 'SF Pro', value: 'sf' },
-                { label: 'Roboto', value: 'roboto' },
-                { label: 'Arial', value: 'arial' }
-              ]"
-              class="w-full"
-            />
+            <label class="block text-sm font-medium mb-2">Legal Company Line Size</label>
+            <div class="flex items-center gap-2">
+              <USlider
+                v-model="options.size.legalCompany"
+                :min="10"
+                :max="18"
+                class="flex-1"
+              />
+              <UInput
+                v-model.number="options.size.legalCompany"
+                type="number"
+                :min="10"
+                :max="18"
+                size="sm"
+                class="w-20"
+              >
+                <template #trailing>
+                  <span class="text-xs text-muted">px</span>
+                </template>
+              </UInput>
+            </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">Title Font Weight</label>
-            <USelect
-              v-model="options.font.titleWeight"
-              :items="[
-                { label: 'Regular', value: '400' },
-                { label: 'Medium', value: '500' },
-                { label: 'Semi Bold', value: '600' },
-                { label: 'Bold', value: '700' }
-              ]"
-              class="w-full"
-            />
+            <label class="block text-sm font-medium mb-2">Legal Disclaimer Size</label>
+            <div class="flex items-center gap-2">
+              <USlider
+                v-model="options.size.legalDisclaimer"
+                :min="10"
+                :max="18"
+                class="flex-1"
+              />
+              <UInput
+                v-model.number="options.size.legalDisclaimer"
+                type="number"
+                :min="10"
+                :max="18"
+                size="sm"
+                class="w-20"
+              >
+                <template #trailing>
+                  <span class="text-xs text-muted">px</span>
+                </template>
+              </UInput>
+            </div>
           </div>
+
+<!--          <div>-->
+<!--            <label class="block text-sm font-medium mb-2">Font Family</label>-->
+<!--            <USelect-->
+<!--              v-model="options.font.family"-->
+<!--              :items="[-->
+<!--                { label: 'Inter', value: 'inter' },-->
+<!--                { label: 'SF Pro', value: 'sf' },-->
+<!--                { label: 'Roboto', value: 'roboto' },-->
+<!--                { label: 'Arial', value: 'arial' }-->
+<!--              ]"-->
+<!--              class="w-full"-->
+<!--            />-->
+<!--          </div>-->
+
+<!--          <div>-->
+<!--            <label class="block text-sm font-medium mb-2">Title Font Weight</label>-->
+<!--            <USelect-->
+<!--              v-model="options.font.titleWeight"-->
+<!--              :items="[-->
+<!--                { label: 'Regular', value: '400' },-->
+<!--                { label: 'Medium', value: '500' },-->
+<!--                { label: 'Semi Bold', value: '600' },-->
+<!--                { label: 'Bold', value: '700' }-->
+<!--              ]"-->
+<!--              class="w-full"-->
+<!--            />-->
+<!--          </div>-->
         </div>
       </template>
 
@@ -469,6 +517,26 @@ const uid = Math.random().toString(36).substring(2, 15)
               <template #content>
                 <div class="p-2 w-[240px]">
                   <UColorPicker v-model="options.color.subtitle" />
+                </div>
+              </template>
+            </UPopover>
+          </div>
+
+          <div>
+            <UPopover>
+              <UButton color="neutral" variant="outline" size="sm">
+                <template #leading>
+                  <span
+                    class="size-4 rounded-full border border-default"
+                    :style="{ backgroundColor: options.color.legal }"
+                  />
+                </template>
+                Legal Color
+              </UButton>
+
+              <template #content>
+                <div class="p-2 w-[240px]">
+                  <UColorPicker v-model="options.color.legal" />
                 </div>
               </template>
             </UPopover>
@@ -558,6 +626,51 @@ const uid = Math.random().toString(36).substring(2, 15)
               />
               <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
                 {{ options.gap.social }}px
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Gap: Details → Socials</label>
+            <div class="flex items-center gap-2">
+              <USlider
+                v-model="options.gap.socialSection"
+                :min="0"
+                :max="40"
+                class="flex-1"
+              />
+              <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
+                {{ options.gap.socialSection }}px
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Gap: Socials → Company</label>
+            <div class="flex items-center gap-2">
+              <USlider
+                v-model="options.gap.socialToCompany"
+                :min="0"
+                :max="40"
+                class="flex-1"
+              />
+              <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
+                {{ options.gap.socialToCompany }}px
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Gap: Company → Legal</label>
+            <div class="flex items-center gap-2">
+              <USlider
+                v-model="options.gap.legalSection"
+                :min="0"
+                :max="40"
+                class="flex-1"
+              />
+              <span class="bg-gray-200 dark:bg-neutral-800 px-2 py-1 rounded-md text-xs">
+                {{ options.gap.legalSection }}px
               </span>
             </div>
           </div>

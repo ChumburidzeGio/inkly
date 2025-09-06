@@ -1,6 +1,7 @@
 export type Alignment = 'top' | 'center' | 'bottom'
 export type ImageForm = 'circle' | 'square' | 'rectangle'
 export type BorderStyle = 'solid' | 'dashed' | 'dotted'
+// Deprecated: previously used; kept for backward compat in case imports exist
 export type ShadowSize = 'sm' | 'md' | 'lg'
 export type FontFamily = 'inter' | 'sf' | 'roboto' | 'arial'
 export type FontWeight = '400' | '500' | '600' | '700'
@@ -19,17 +20,23 @@ export interface SignatureOptions {
     subtitle: number
     social: number
     image: number
+    socialSection: number
+    legalSection: number
+    socialToCompany: number
   }
   size: {
     title: number
     subtitle: number
     social: number
+    legalCompany: number
+    legalDisclaimer: number
   }
   color: {
     title: string
     autoTitle: boolean
     subtitle: string
     social: string
+    legal: string
     background: string
     transparent: boolean
   }
@@ -42,7 +49,8 @@ export interface SignatureOptions {
     borderColor: string
     borderWidth: number
     shadow: boolean
-    shadowSize: ShadowSize
+    // Use numeric intensity in UI and rendering
+    shadowIntensity: number
   }
   font: {
     family: FontFamily
