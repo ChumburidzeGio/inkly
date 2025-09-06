@@ -172,6 +172,7 @@ onMounted(() => {
                 :data
                 :options
                 :theme
+                :is-mobile="isMobile"
               />
             </div>
           </div>

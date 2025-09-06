@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { Signature } from '~~/types'
 
-const props = defineProps<Signature & { theme?: string }>()
+const props = defineProps<Signature & { theme?: string, isMobile?: boolean }>()
 const { data, options, theme = 'dark' } = props
 
 const toast = useToast()
 const signatureContainer = ref<HTMLElement>()
 const copied = ref(false)
+
+const scale = computed(() => (props.isMobile ? 1 : 0.9))
+function px(n: number) {
+  return `${Math.round(n * scale.value)}px`
+}
 
 async function copyToClipboard() {
   const el = signatureContainer.value
@@ -127,7 +132,7 @@ async function copyToClipboard() {
               <td
                 style="padding: 6px;"
                 :style="[
-                  { fontSize: `${options.size.subtitle}px`, verticalAlign: 'top' }
+                  { fontSize: px(options.size.subtitle), verticalAlign: 'top' }
                 ]"
                 :class="[
                   options.font.family === 'inter' ? 'font-inter' :
@@ -136,12 +141,12 @@ async function copyToClipboard() {
                   'font-arial'
                 ]"
               >
-                <table :style="{ fontSize: `${options.size.subtitle}px` }">
+                <table :style="{ fontSize: px(options.size.subtitle), lineHeight: `${Math.round(options.size.subtitle * scale * 1.25)}px` }">
                   <tr v-if="data.fullName">
                     <td
                       :style="[
                         {
-                          fontSize: `${options.size.title}px`,
+                          fontSize: px(options.size.title),
                           color: options.color.autoTitle ? '' : options.color.title,
                           fontWeight: options.font.titleWeight
                         }
@@ -151,7 +156,7 @@ async function copyToClipboard() {
                     </td>
                   </tr>
                   <tr v-if="data.jobTitle || data.company" :style=" { color: `${options.color.subtitle}`}">
-                    <td :style="{ fontSize: `${options.size.subtitle}px`, color: `${options.color.subtitle}` }">
+                    <td :style="{ fontSize: px(options.size.subtitle), color: `${options.color.subtitle}` }">
                       <template v-if="data.jobTitle && data.company">
                         {{ data.jobTitle }} at {{ data.company }}
                       </template>
@@ -172,7 +177,7 @@ async function copyToClipboard() {
                     <td>
                       <table>
                         <tbody>
-                          <tr :style="{ fontSize: `${options.size.social}px` }">
+                          <tr :style="{ fontSize: px(options.size.social) }">
                             <td v-for="social in data.socials.filter((social) => social.url)" :key="social.title" :style="{ paddingRight: `${options.gap.social}px` }">
                               <a :href="social.url" style="text-decoration: underline" :style="{ color: `${options.color.social}` }">{{ social.title }}</a>
                             </td>
@@ -187,7 +192,7 @@ async function copyToClipboard() {
             <!-- Footer / Legal Disclaimer spanning full width -->
             <tr>
               <td colspan="2" style="padding: 6px;"
-                  :style="{ fontSize: `${options.size.social}px`, color: `${options.color.subtitle}` }">
+                  :style="{ fontSize: px(options.size.social), color: `${options.color.subtitle}` }">
                 <div v-if="data.legalCompanyLine">
                   {{ data.legalCompanyLine }}
                 </div>
