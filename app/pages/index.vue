@@ -43,29 +43,14 @@ const data = ref<SignatureFormData>({
   fullName: 'Giorgi Chumburidze',
   jobTitle: 'CEO',
   company: 'Relocify',
-  email: 'giorgi@relocify.com',
   phone: '(+31) 6 85 07 79 95',
+  legalCompanyLine: 'Esflow Technologies B.V. | KvK number: 75821036 | Herengracht 449 A, 1017 BR, Amsterdam',
+  legalDisclaimer: 'The information in this e-mail is confidential and may be protected by professional secrecy. It is intended solely for the addressee. Any access to this e-mail is prohibited by persons other than the addressee. If you are not the named addressee, you are prohibited to make any attempt to publicize, reproduce or distribute this e-mail, this includes the taking or refraining of action in regards to the information obtained. Please notify the sender by e-mail immediately if you have received this e-mail by mistake and delete this e-mail from your system.',
   socials: [
-    {
-      title: 'Relocify',
-      url: 'https://relocify.nl/',
-      type: 'portfolio',
-    },
-    {
-      title: 'TikTok',
-      url: 'https://www.tiktok.com/@relocify_',
-      type: 'tiktok',
-    },
-    {
-      title: 'Instagram',
-      url: 'https://www.instagram.com/relocify',
-      type: 'instagram',
-    },
-    {
-      title: 'Whatsapp',
-      url: 'https://api.whatsapp.com/send?phone=31626243500',
-      type: 'whatsapp',
-    },
+    { title: 'Relocify', url: 'https://relocify.nl/' },
+    { title: 'TikTok', url: 'https://www.tiktok.com/@relocify_' },
+    { title: 'Instagram', url: 'https://www.instagram.com/relocify' },
+    { title: 'Whatsapp', url: 'https://api.whatsapp.com/send?phone=31626243500' },
   ],
 })
 
@@ -172,7 +157,6 @@ onMounted(() => {
                 />
                 <div class="text-xs">
                   <span class="font-medium">{{ data.fullName }}</span>
-                  <span class="text-neutral-500 dark:text-neutral-400"> ({{ data.email || 'email@example.com' }})</span>
                 </div>
               </div>
             </div>

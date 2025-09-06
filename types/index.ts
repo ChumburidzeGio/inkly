@@ -55,12 +55,12 @@ export interface SignatureFormData {
   fullName: string
   jobTitle: string
   company: string
-  email: string
   phone: string
+  legalCompanyLine: string
+  legalDisclaimer: string
   socials: Array<{
     title: string
     url: string
-    type: string
   }>
 }
 
@@ -68,4 +68,3 @@ export interface Signature {
   data: SignatureFormData
   options: SignatureOptions
 }
-

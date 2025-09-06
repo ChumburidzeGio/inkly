@@ -127,7 +127,7 @@ async function copyToClipboard() {
               <td
                 style="padding: 6px;"
                 :style="[
-                  { fontSize: `${options.size.subtitle}px` }
+                  { fontSize: `${options.size.subtitle}px`, verticalAlign: 'top' }
                 ]"
                 :class="[
                   options.font.family === 'inter' ? 'font-inter' :
@@ -163,11 +163,6 @@ async function copyToClipboard() {
                       </template>
                     </td>
                   </tr>
-                  <tr v-if="data.email" :style=" { color: `${options.color.subtitle}`}">
-                    <td :style="{ fontSize: `${options.size.subtitle}px`, color: `${options.color.subtitle}` }">
-                      {{ data.email }}
-                    </td>
-                  </tr>
                   <tr v-if="data.phone" :style=" { color: `${options.color.subtitle}`}">
                     <td>
                       {{ data.phone }}
@@ -187,6 +182,18 @@ async function copyToClipboard() {
                     </td>
                   </tr>
                 </table>
+              </td>
+            </tr>
+            <!-- Footer / Legal Disclaimer spanning full width -->
+            <tr>
+              <td colspan="2" style="padding: 6px;"
+                  :style="{ fontSize: `${options.size.social}px`, color: `${options.color.subtitle}` }">
+                <div v-if="data.legalCompanyLine">
+                  {{ data.legalCompanyLine }}
+                </div>
+                <div v-if="data.legalDisclaimer" style="margin-top: 6px; white-space: pre-wrap;">
+                  {{ data.legalDisclaimer }}
+                </div>
               </td>
             </tr>
           </tbody>
